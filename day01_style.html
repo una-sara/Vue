@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+    <div id="app">
+        <!--使用style当做普通字符串-->
+        <input v-model="phone" @focus="getFocus" @blur="myBlur">
+         <span :style="spanstyle">{{text}}</span>
+    </div>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data: {
+                phone:"",
+                spanstyle: {
+                    background: "",
+                    color: ""
+                },
+                text: ""
+            },
+            methods: {
+                getFocus() {//当获得焦点时自动触发
+                    //清空span的内容和样式
+                    this.text = "";
+                    this.spanstyle.background = "";
+                    this.spanstyle.color = ""
+                },
+                myBlur() {//当失去焦点时自动触发
+                    //验证文本框中的内容
+                    //如果验证通过
+                    if (/^1[3-8]\d{9}/.test(this.phone)) {
+                        //修改span的内容和样式为正确的样式
+                        this.text = "手机号格式正确";
+                        this.spanstyle.background = "green";
+                        this.spanstyle.color = "lightGreen";
+                    } else {
+                        //否则
+                        //修改span的内容和样式为错误的样式
+                        this.text = "手机号格式错误";
+                        this.spanstyle.background = "red";
+                        this.spanstyle.color = "pink"
+                    }
+                }
+
+            }
+
+        })
+    </script>
+</body>
+
+</html>

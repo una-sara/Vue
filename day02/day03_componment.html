@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+<body>
+    <!--1.专属的HTML片段-->
+    <!--2.专属的JS和数据-->
+    <!--3.专属的CSS-->
+    <!--1.定义一个名为my-counter的组件，反复调用-->
+    <!--1.专属HTML5片段-->
+    <template id="tplCounter">
+        <div><!--组件的HTML片段必须被一个唯一的父元素包裹-->
+            <button @click="change(-1)">-</button>
+            <span>{{count}}</span>
+            <button @click="change(+1)">+</button>
+        </div>
+    </template>
+   <!--2.专属的JS和数据-->
+    <script>
+        // 2.创建自定义组件对象：
+        Vue.component("my-counter", {
+            //和new Vue()极其相似
+            template: "#tplCounter",//代替了el,每创建一个组件，
+            //会自动代替组件标签的位置
+            data: function () {
+                //每创建一个组件的副本，就自动调用过一次，为当前新副本创建一个专属的
+                //模型数据对象
+                //data(),为当前组件创建专属的模型数据data
+                return {//原来的data
+                    count: 1
+                }
+            },
+            methods: { //其余和new Vue()完全一样
+                change(i) {
+                    this.count += i;
+                    if (this.count == 0)
+                        this.count = 1;
+                }
+            }
+        })
+    </script>
+    <div id="app"><!--主界面-->
+        <my-counter></my-counter>
+        <my-counter></my-counter>
+    </div>
+    <script>
+      new Vue({//加载组件的HTML和JS
+          el:"#app",
+          data:{}
+      })
+    </script>
+</body>
+
+</html>

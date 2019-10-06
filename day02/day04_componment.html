@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+</head>
+
+<body>
+    <template id="tplTodo">
+        <div>
+            <h1>待办事项列表</h1>
+            <todo-list></todo-list>     
+            <todo-add></todo-add>      
+        </div>
+    </template>
+
+    <template id="tplTodoAdd">
+        <div>
+            <input><button>添加</button>
+        </div>
+    </template>
+    <script>
+       Vue.component("todo-add",{
+           template:"#tplTodoAdd"
+       })
+    </script>
+
+    <template id="tplTodoList">
+        <ul>
+          <todo-item></todo-item>
+          <todo-item></todo-item>
+          <todo-item></todo-item>
+        </ul>
+    </template>
+
+    <script>
+      Vue.component("todo-list",{
+          template:"#tplTodoList"
+      })
+    </script>
+    <template id="tplTodoItem">
+            <li>1---吃饭</li>
+    </template>
+    <script>
+        Vue.component("todo-item",{
+            template:"#tplTodoItem"
+        })
+    </script>
+    <script>
+        Vue.component("todo",{
+            template:"#tplTodo",
+        })
+    </script>
+    <div id="app"><!--主界面-->
+         <todo></todo>
+    </div>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {}
+        })
+
+    </script>
+</body>
+
+</html>

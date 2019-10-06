@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="js/vue.js"></script>
+    <script src="js/vue-router.js"></script>
+</head>
+
+<body>
+    <template id="tplHeader">
+         <header>
+             <h1>这里是页头</h1>
+             <router-link to="/login">登录</router-link>
+             <hr>
+         </header>
+    </template>
+    <script>
+       Vue.component("my-header",{
+           template:'#tplHeader'
+       })
+    </script>
+    
+     <template id="tplHome">
+        <div>
+            <my-header></my-header>
+            <router-view></router-view>
+        </div>
+     </template>
+     <script>
+        var Home={
+            template:"#tplHome"
+        }
+     </script>
+
+   <template id="tplDetails"> 
+    <div>
+        <h1>这里是详情页</h1>
+        <h2>{{$route.params.lid}}号商品</h2>
+        <h2>{{lid}}号商品</h2>
+    </div>
+   </template>
+   <script>
+      var Details={
+           template:"#tplDetails",
+           props:["lid"]
+      }
+   </script>
+
+    <!--3.定义各个“页面”的子组件，每个子组件都包含2部分：<template>和<script>-->
+    <template id="tplIndex">
+        <div>
+            <h1>这是首页</h1>
+            <ul>
+                <li>
+                  <router-link to="/details/9">查看详情
+                  </router-link><br>
+                  <router-link to="/details/12">查看详情
+                  </router-link><br>
+                  <router-link to="/details/5">查看详情
+                  </router-link>
+               </li>
+            </ul>
+        </div>
+    </template>
+    <script>
+        var Index = {
+            template: "#tplIndex"
+        }
+    </script>
+    <template id="tplLogin">
+        <div>
+            用户名:<input><br>
+            密码：<input type="password">
+            <button @click="login()">登录</button>
+        </div>
+    </template>
+    <script>
+        var Login = {
+            template: "#tplLogin",
+            methods:{
+                login(){
+                    alert("登录成功");
+                    this.$router.push("/");
+                }
+            }
+        }
+    </script>
+   
+     <template id="tplNotFound">
+         <h1 style="color:red">404:页面不存在!</h1>
+     </template>
+     <script>
+        var NotFound={
+           template:'#tplNotFound' 
+        }
+     </script>
+    
+    <script>
+        //4.定义路由
+        //4.1定义路由字典
+        var routes=[
+            //用path："/ "代替了path:"/home"
+            {path:"/",component:Home,children:[
+                {path:"/",component:Index},
+                {path:"/index",component:Index},
+                 {
+                     path:"/details/:lid",
+                     component:Details,
+                     props:true//让参数lid自动变成属性变量
+                 },
+                
+                {path:"/details/:lid",component:Details}
+            ]},
+            {path:"/login",component:Login},
+            {path:"/*",component:NotFound}
+        ];
+      
+        //4.2创建路由器对象，装载路由字典
+        var router=new VueRouter({routes})
+         //4.3将router装入new Vue()
+    </script>
+      
+    <!--1.创建唯一完整的html页面，其中定义受Vue监控的div#app和new Vue()-->
+    <div id="app">
+        <!--2.在html页面内,用router-view临时占位-->
+        <router-view></router-view>
+    </div>
+    <script>
+       new Vue({//负责加载页面
+            el: "#app",
+            data: {},
+            router
+        })//4.3 
+    </script>
+</body>
+
+</html>

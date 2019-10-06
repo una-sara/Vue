@@ -1,0 +1,233 @@
+1.创建vue指令
+Vue.directive("指令名",{
+inserted(elem){
+//指令所在的元素被加载到DOM树上自动执行指令
+//elem 会自动获得指令所在的当前元素
+对elem执行DOM操作！
+}
+})
+2.使用指令：<ANY v-指令名></ANY>
+3.什么是：专门发送http请求的函数库
+为什么：ajax
+1.自己封装的函数
+2.JQuery：$.ajax()小题大做
+3.Vue有一个组件resource,已不推荐使用
+4.Axios官方推荐
+何时：只要在vue中发送ajax请求都用axios
+
+4.localhost:3000/index
+localhost:3000/details?lid=9
+
+如何：
+1.引入：axios.min.js
+2.发送两种请求：
+get请求：
+
+axios.get("url",{
+params:{
+参数:值
+}
+}).then(res=>{
+获得服务端返回的结果：res.data
+})
+
+post请求：
+axios.post("url","变量=值&变量=值&...").then(res=>{...})
+
+
+3.组件化开发：
+什么是组件：拥有专属的HTML，CSS，JS和数据的页面独立区域
+什么是组件化开发：今后所有页面都是由多个组件组成的。
+每定义一个网页，都要划分组件结构，再分别编写每个组件。
+为什么：
+1.便于大项目的分工协作
+2.松散耦合
+3.重用
+
+如何：
+1.创建组件：
+每个组件包含三部分：
+HTML：独立的HTML片段：
+<template id="tplxxx"></template>
+<template>
+    是HTML5中新增的专门保存一段隐藏的HTML片段的元素
+    ---专门为框架保存HTML模板
+</template>
+JS:
+<script>
+    Vue.component("组件名", {
+        //和new Vue()极其相似
+        template: "#tplxxx",//代替了el,每创建一个组件的副本，
+        //就自动复制一次模板中的HTML片段。
+        data: function () {//每创建一个组件的专属副本，就调用一次
+            //data(),为当前组件创建专属的模型数据data
+            return {
+                count: 1
+            }
+        },
+         //其余和new Vue()完全一样
+        methods:{
+            change(i){
+                this.count+=i;
+                if(this.count==0){
+                    this.count=1
+                }
+            }
+        }
+    })
+</script>
+CSS:<style></style>
+
+2.使用组件：
+组件名其实就是一个标签名
+只要在主内容中，添加一个<组件名></组件名>,运行时Vue就会用组件的template
+代替<组件名>标签所在的位置
+
+
+第一步：使用template定义组件的HTML片段。
+第二步：在Script当中用Vue.component创建组件的数据模型方法，跟核心Vue是一样的。
+第三步：主界面的APP
+第四步： new Vue才认得出组件对象。
+
+组件分类：
+1.new Vue({----根组件
+  el:"#app",
+  data:{}
+})
+
+2.Vue.component("组件名",{---全局组件:可在任何位置随意使用的组件
+  template:"#tplxxx",
+  data:function(){return{}}
+})
+3.子组件：仅限于在某个组件内才能使用的组件
+如何：3步：
+1.只要将Vue.component降级为普通对象
+强调：变量名最好是将来组件标签名的驼峰方式
+2.在父组件中添加components属性：{
+    子组件变量名，子组件变量名,//ES6简写
+}
+ Vue会将驼峰命名的组件名，转为小写，并用-分隔
+   比如： todoAdd  ->todo-add
+          todoList ->todo-list
+组件间传递数据
+父子间：
+1.父子 ->子 
+为什么：Vue中父组件的数据模型是专属的，子组件默认不能使用。
+解决两步：
+1.var 子组件={
+    props:["变量"]//声明一个内外两用的变量
+    //对外：父元素可以为其绑定数据
+    //对内：相当于data:{变量}
+}
+<template id="tpl 子组件">
+    {{}} <ANY:属性="变量"></ANY>
+</template>
+2.父组件: 
+<template id="tpl父组件">
+    <子组件 :变量="模型变量"></子组件>
+    父组件将自己的模型变量的值传递给字组件的变量属性，子组件就获得了父组件的数据。    
+</template>
+
+2.子 ->父
+
+
+1.Spa: Single Page Application
+什么是SPA：整个应用程序只有一个完整的HTML页面和多个保存不同的“页面”内容的组件片段
+  SPA应用侦测地址栏中相对路径的变化，选择匹配的组件片段替换唯一的HTML文件中的相应区域。
+vs 单页面
+   请求次数：单页面应用只在首次加载时请求一次，将一个完整的
+   HTML页面和多个片段都获取到客户端保存。每次跳转时，不再需要向
+   服务器端发送请求。
+   多页面应用：每跳转一次页面。都重新向服务器发送请求---多次
+   页面跳转：
+   单页面应用，不需要替换整棵DOM树，只需要替换DOM树中局部节点即可--效率高
+   多页面应用，每次跳转，需要删除并重建整棵DOM树---效率低
+   相同资源的请求：Bootstrap
+   单页面应用因为页面没有改变，所以无需重复请求资源多页面应用，每加载一次页面，
+   都重新请求所需的资源。
+2.Vue-router组件：
+ 什么是：在Vue中专门实现单页面应用的组件。
+ 何时：如果用Vue框架实现单页面引用时
+ 如何：
+ 1.下载并引入vue-router.js 
+ 2.定义基本的根组件
+ <div id="app">
+    
+ </div>
+ <script>
+    new Vue({
+        el:"#app",
+        data:{}
+    }) 
+ </script>
+ 3.在根组件内容中，预留可能被其他子组件替换的区域。
+ <router-view/>为其他子组件的片段占位
+ 何时：只要页面中可能变化的片段区域，都要用router-view占位
+ 4.定义多个子组件，每个子组件2部分组成：<template>  <script>
+ //5.定义路由：3步走
+ //1.定义路由字典：
+ //  路由字典：包含相对路径和组件间对应关系的集合。
+ var routers=[
+     {path:"/idnex",component:Index},
+     {path:"/login",component:Login}
+ ]
+ //2.创建路由对象，装载路由字典
+ //var router=new VueRouter({routers})
+ //3.将路由装入根组件new Vue中
+ //new Vue({
+ //    ...,
+ //    router
+ //})
+
+/*嵌套路由：
+什么是：在路由字典中的一个路由对象中，又包含了子路由对象。
+何时：多个“页面”组件中包含部分相同的区域时：header
+如何：
+1.相同部分的组件，提取成全局组件。
+2.再额外提取出一个父组件，包含;
+<相同部分的全局组件>
+<router-view>
+3.配置路由字典：
+{path:/父路径,component:父组件,children:[
+    {path:"/父路径/子路径",component:子组件},
+    ......
+]}
+运行时：地址栏中:#/父路径/子路径
+/父路径 先用父组件代替div#app中的<router-view>
+   /子组件 再用子组件代替父组件中的<router-view>
+
+*/
+
+/**
+路由跳转:2种
+1.HTML:<router-link to="/相对路径">文本</router-link>
+加载时：<a href="/相对路径">文本<router-link>
+              自动判断是否需要#
+2.js:this.$router.push("/目标地址")
+
+
+路由传参：
+1.在路由字典中，就提前配置好：
+   {path:"/details/:lid",....}
+2.跳转时：/details/9 
+3.组件中接收传参值：this.$route.params.lid
+                   location search
+简化:{path:"/details/:lid",...,props:true}  
+    var 组件={
+        ...,
+        props:["lid"]
+    }
+    绑定时,可直接用lid变量
+*/
+/*
+3.脚手架:
+  什么是脚手架代码：半成品的项目源代码，只需个性化的数据和界面。
+  什么是脚手架命令行工具(CLI):反复创建脚手架源代码
+如何：
+1.用npm安装脚手架命令行工具：
+npm i -g @vue/cli
+ 结构：可在命令行中使用Vue命令反复创建Vue脚手架项目源代码
+ 2.用vue脚手架工具命令行创建项目源代码：
+   vue create 项目名
+**/
+
